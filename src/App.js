@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Routes from './Routes';
+import Navbar from './components/Navbar';
+import './App.css'
+const App = () => {
+  const isAuthenticated = useSelector((state) => !!state.auth.user);
+  const username = useSelector((state) => state.auth.user?.username);
+  const history = useNavigate();
 
-function App() {
+  // Redirect to the login page if not authenticated
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      history('/login');
+    }
+  }, [isAuthenticated, history]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar isAuthenticated={isAuthenticated} username={username} />
+      <div className="container">
+        <Routes />
+      </div>
+    </>
   );
-}
+};
 
 export default App;
